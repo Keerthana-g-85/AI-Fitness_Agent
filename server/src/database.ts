@@ -1,7 +1,24 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
+import Allergy from "./Model/Allergy";
+import BodyComposition from "./Model/BodyComposition";
+import BodyMeasurement from "./Model/BodyMeasurement";
+import DataSharingConsent from "./Model/DataSharingConsent";
+import EatingHabit from "./Model/EatingHabit";
+import ExerciseRestriction from "./Model/ExerciseRestriction";
+import FitnessGoal from "./Model/FitnessGoal";
+import FoodAvailability from "./Model/FoodAvailability";
+import FoodPreference from "./Model/FoodPreference";
+import MedicalHistory from "./Model/MedicalHistory";
+import Medication from "./Model/Medication";
+import OnboardingSubmission from "./Model/OnboardingSubmission";
+import Personalization from "./Model/Personalization";
 import User from "./Model/User";
+import UserProfile from "./Model/UserProfile";
+import WorkLife from "./Model/WorkLife";
+import WorkoutPreference from "./Model/WorkoutPreference";
+import WorkoutSchedule from "./Model/WorkoutSchedule";
 
 dotenv.config();
 
@@ -23,7 +40,26 @@ export const database = new DataSource({
   password: getRequiredEnv("DB_PASSWORD"),
   port: Number(process.env.DB_PORT),
   synchronize: false,
-  entities: [User],
+  entities: [
+    Allergy,
+    BodyComposition,
+    BodyMeasurement,
+    DataSharingConsent,
+    EatingHabit,
+    ExerciseRestriction,
+    FitnessGoal,
+    FoodAvailability,
+    FoodPreference,
+    MedicalHistory,
+    Medication,
+    OnboardingSubmission,
+    Personalization,
+    User,
+    UserProfile,
+    WorkLife,
+    WorkoutPreference,
+    WorkoutSchedule,
+  ],
   migrations: ["./migrations/*.ts"],
 });
 

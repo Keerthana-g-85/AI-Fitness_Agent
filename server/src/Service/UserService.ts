@@ -3,6 +3,7 @@ import { QueryFailedError } from "typeorm";
 import CreateUserArguments from "../Arguments/UserArguments/CreateUser";
 import User from "../Model/User";
 import UserResponse from "../Response/UserResponse";
+import { createAuthToken } from "../auth";
 import { database } from "../database";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -45,6 +46,8 @@ export default class UserService {
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
+    let createdUser: User;
+
     try {
       const user = userRepository.create({
         name,
@@ -52,7 +55,7 @@ export default class UserService {
         password: hashedPassword,
       });
 
-      await userRepository.save(user);
+      createdUser = await userRepository.save(user);
     } catch (error) {
       if (isUniqueViolation(error)) {
         return { success: false, message: "Email already registered" };
@@ -61,7 +64,11 @@ export default class UserService {
       throw error;
     }
 
-    return { success: true, message: "Registration successful" };
+    return {
+      success: true,
+      message: "Registration successful",
+      token: createAuthToken(createdUser.id),
+    };
   }
 
   private validateInput(name: string, email: string, password: string): string | null {

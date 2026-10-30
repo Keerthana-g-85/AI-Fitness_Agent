@@ -11,6 +11,7 @@ export interface CreateUserInput {
 export interface RegisterResponse {
   success: boolean;
   message: string;
+  token?: string | null;
 }
 
 interface RegisterMutationData {

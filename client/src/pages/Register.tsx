@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import {
   Alert,
@@ -17,6 +18,7 @@ import {
   getRegistrationErrorMessage,
   registerUser,
 } from "../api/userApi";
+import { setAuthToken } from "../api/auth";
 import type { RegisterResponse } from "../api/userApi";
 import {
   EMPTY_REGISTER_FORM,
@@ -28,6 +30,7 @@ import type {
   RegisterField,
   RegisterFormValues,
 } from "../validation/register";
+import { useOnboarding } from "../context/OnboardingContext";
 
 interface Feedback {
   severity: "success" | "error";
@@ -63,6 +66,8 @@ const PasswordVisibilityToggle = ({
 );
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+  const { resetOnboarding } = useOnboarding();
   const [values, setValues] = useState<RegisterFormValues>(EMPTY_REGISTER_FORM);
   const [errors, setErrors] = useState<RegisterErrors>({});
   const [feedback, setFeedback] = useState<Feedback | null>(null);
@@ -79,7 +84,9 @@ const RegisterPage = () => {
 
       setValues(EMPTY_REGISTER_FORM);
       setErrors({});
-      setFeedback({ severity: "success", message: response.message });
+      setAuthToken(response.token ?? null);
+      resetOnboarding();
+      navigate("/profile", { state: { registrationSuccess: true } });
     },
     onError: (error: unknown) => {
       setFeedback({

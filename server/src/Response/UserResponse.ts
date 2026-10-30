@@ -7,4 +7,7 @@ export default class UserResponse {
 
   @Field(() => String)
   message!: string;
+
+  @Field(() => String, { nullable: true })
+  token?: string | null;
 }

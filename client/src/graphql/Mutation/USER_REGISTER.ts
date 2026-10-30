@@ -5,6 +5,7 @@ export const USER_REGISTER = gql`
     createUser(input: $input) {
       success
       message
+      token
     }
   }
 `;
