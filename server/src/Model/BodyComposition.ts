@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Field, ID, ObjectType } from "type-graphql";
 import User from "./User";
+import BodyMeasurement from "./BodyMeasurement";
 
 @ObjectType()
 @Entity("body_compositions")
@@ -67,6 +68,13 @@ export default class BodyComposition {
 
   @Column({ name: "metabolic_age", type: "integer", nullable: true })
   metabolicAge?: number | null;
+
+  @Column({ name: "body_measurement_id", type: "uuid", nullable: true })
+  bodyMeasurementId?: string | null;
+
+  @ManyToOne(() => BodyMeasurement, { nullable: true, onDelete: "SET NULL" })
+  @JoinColumn({ name: "body_measurement_id" })
+  bodyMeasurement?: BodyMeasurement | null;
 
   @Column({ type: "varchar", length: 80, nullable: true })
   source?: string | null;

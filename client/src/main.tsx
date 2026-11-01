@@ -5,6 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
+import { AuthProvider } from "./context/AuthContext";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import { theme } from "./theme";
 
@@ -29,7 +30,9 @@ createRoot(rootElement).render(
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <OnboardingProvider>
-            <App />
+            <AuthProvider>
+              <App />
+            </AuthProvider>
           </OnboardingProvider>
         </QueryClientProvider>
       </LocalizationProvider>

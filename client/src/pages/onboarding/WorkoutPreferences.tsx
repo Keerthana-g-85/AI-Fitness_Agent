@@ -196,7 +196,7 @@ const WorkoutPreferencesPage = () => {
   return (
     <OnboardingLayout
       description="Share your experience, preferred activities and the schedule you can realistically follow."
-      stepIndex={8}
+      stepIndex={7}
       title="Workout preferences"
     >
       <Box

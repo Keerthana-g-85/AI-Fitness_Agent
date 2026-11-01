@@ -95,7 +95,7 @@ const FitnessGoalPage = () => {
       return;
     }
 
-    navigate("/body-measurements");
+    navigate("/body-composition");
   };
 
   return (
@@ -229,7 +229,7 @@ const FitnessGoalPage = () => {
 
           <FormNavigation
             backLabel="Back: Profile"
-            nextLabel="Next: Body Measurements"
+            nextLabel="Next: Body Composition"
             onBack={() => navigate("/profile")}
             onNext={handleNext}
           />

@@ -50,6 +50,12 @@ export default class Personalization {
   @Column({ name: "notification_frequency", type: "varchar", length: 30, nullable: false })
   notificationFrequency!: string;
 
+  @Column({ name: "daily_water_target_ml", type: "integer", nullable: true })
+  dailyWaterTargetMl?: number | null;
+
+  @Column({ name: "sleep_goal_minutes", type: "integer", nullable: true })
+  sleepGoalMinutes?: number | null;
+
   @Field(() => Date)
   @CreateDateColumn({ name: "created_at", type: "timestamptz" })
   createdAt!: Date;

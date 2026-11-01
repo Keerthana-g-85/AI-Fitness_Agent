@@ -71,6 +71,12 @@ export default class BodyMeasurement {
   @Column({ name: "right_calf_cm", type: "numeric", precision: 5, scale: 2, nullable: true })
   rightCalfCm?: string | null;
 
+  @Column({ name: "height_cm", type: "numeric", precision: 5, scale: 2, nullable: true })
+  heightCm?: string | null;
+
+  @Column({ type: "varchar", length: 80, nullable: true })
+  source?: string | null;
+
   @Column({ name: "measured_at", type: "date", nullable: true })
   measuredAt?: string | null;
 

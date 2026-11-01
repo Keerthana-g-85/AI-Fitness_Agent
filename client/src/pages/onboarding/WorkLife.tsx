@@ -118,7 +118,7 @@ const WorkLifePage = () => {
   return (
     <OnboardingLayout
       description="Show us how your day fits together so meal and workout plans can work around your routine."
-      stepIndex={9}
+      stepIndex={8}
       title="Work life and daily routine"
     >
       <Box

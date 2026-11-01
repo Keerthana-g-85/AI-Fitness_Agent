@@ -17,7 +17,6 @@ import {
 import type {
   Allergy,
   BodyCompositionData,
-  BodyMeasurementsData,
   EatingHabits,
   ExerciseRestrictions,
   FitnessGoalData,
@@ -39,7 +38,6 @@ interface OnboardingContextValue {
   data: OnboardingData;
   updateProfile: (updates: Partial<ProfileData>) => void;
   updateFitnessGoal: (updates: Partial<FitnessGoalData>) => void;
-  updateBodyMeasurements: (updates: Partial<BodyMeasurementsData>) => void;
   updateBodyComposition: (updates: Partial<BodyCompositionData>) => void;
   addMedicalCondition: () => void;
   updateMedicalCondition: (
@@ -96,10 +94,6 @@ const loadOnboardingData = (): OnboardingData => {
           : initialData.submissionId,
       profile: { ...initialData.profile, ...parsedData.profile },
       fitnessGoal: { ...initialData.fitnessGoal, ...parsedData.fitnessGoal },
-      bodyMeasurements: {
-        ...initialData.bodyMeasurements,
-        ...parsedData.bodyMeasurements,
-      },
       bodyComposition: {
         ...initialData.bodyComposition,
         ...parsedData.bodyComposition,
@@ -179,16 +173,6 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
       fitnessGoal: { ...currentData.fitnessGoal, ...updates },
     }));
   }, []);
-
-  const updateBodyMeasurements = useCallback(
-    (updates: Partial<BodyMeasurementsData>) => {
-      setData((currentData) => ({
-        ...currentData,
-        bodyMeasurements: { ...currentData.bodyMeasurements, ...updates },
-      }));
-    },
-    [],
-  );
 
   const updateBodyComposition = useCallback(
     (updates: Partial<BodyCompositionData>) => {
@@ -384,7 +368,6 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
       data,
       updateProfile,
       updateFitnessGoal,
-      updateBodyMeasurements,
       updateBodyComposition,
       addMedicalCondition,
       updateMedicalCondition,
@@ -410,7 +393,6 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
       data,
       updateProfile,
       updateFitnessGoal,
-      updateBodyMeasurements,
       updateBodyComposition,
       addMedicalCondition,
       updateMedicalCondition,

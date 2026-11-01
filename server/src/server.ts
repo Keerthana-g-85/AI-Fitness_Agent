@@ -6,8 +6,10 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import { buildSchema } from "type-graphql";
 import OnboardingResolver from "./Resolver/OnboardingResolver";
+import ProfileResolver from "./Resolver/ProfileResolver";
+import TrackingResolver from "./Resolver/TrackingResolver";
 import UserResolver from "./Resolver/UserResolver";
-import { getUserIdFromAuthorizationHeader } from "./auth";
+import { getUserIdFromRequest } from "./auth";
 import { connection } from "./database";
 
 dotenv.config();
@@ -18,7 +20,7 @@ const startServer = async (): Promise<void> => {
   await connection();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, OnboardingResolver],
+    resolvers: [UserResolver, OnboardingResolver, ProfileResolver, TrackingResolver],
     validate: false,
   });
 
@@ -37,8 +39,9 @@ const startServer = async (): Promise<void> => {
   app.use(
     "/graphql",
     expressMiddleware(apolloServer, {
-      context: async ({ req }) => ({
-        userId: getUserIdFromAuthorizationHeader(req.headers.authorization),
+      context: async ({ req, res }) => ({
+        userId: getUserIdFromRequest(req),
+        res,
       }),
     }),
   );

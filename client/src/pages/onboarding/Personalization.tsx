@@ -105,7 +105,7 @@ const PersonalizationPage = () => {
   return (
     <OnboardingLayout
       description="Choose how your AI fitness coach should communicate with you."
-      stepIndex={10}
+      stepIndex={9}
       title="Other preferences and personalization"
     >
       <Box

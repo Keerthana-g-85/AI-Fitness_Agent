@@ -50,6 +50,9 @@ export default class WorkoutPreference {
   @Column({ name: "preferred_workouts", type: "jsonb", nullable: false, default: () => "'[]'" })
   preferredWorkouts: string[] = [];
 
+  @Column({ name: "preferred_sports", type: "jsonb", nullable: false, default: () => "'[]'" })
+  preferredSports: string[] = [];
+
   @Field(() => Date)
   @CreateDateColumn({ name: "created_at", type: "timestamptz" })
   createdAt!: Date;

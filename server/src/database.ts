@@ -19,6 +19,12 @@ import UserProfile from "./Model/UserProfile";
 import WorkLife from "./Model/WorkLife";
 import WorkoutPreference from "./Model/WorkoutPreference";
 import WorkoutSchedule from "./Model/WorkoutSchedule";
+import WorkoutSession from "./Model/WorkoutSession";
+import WorkoutExercise from "./Model/WorkoutExercise";
+import WaterIntake from "./Model/WaterIntake";
+import SportsActivity from "./Model/SportsActivity";
+import SleepRecord from "./Model/SleepRecord";
+import FoodIntake from "./Model/FoodIntake";
 
 dotenv.config();
 
@@ -59,6 +65,12 @@ export const database = new DataSource({
     WorkLife,
     WorkoutPreference,
     WorkoutSchedule,
+    WorkoutSession,
+    WorkoutExercise,
+    WaterIntake,
+    SportsActivity,
+    SleepRecord,
+    FoodIntake,
   ],
   migrations: ["./migrations/*.ts"],
 });

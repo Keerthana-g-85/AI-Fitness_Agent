@@ -104,7 +104,7 @@ const MedicationsPage = () => {
   return (
     <OnboardingLayout
       description="List any medications you currently take. This section is optional."
-      stepIndex={5}
+      stepIndex={4}
       title="Medications"
     >
       <Box

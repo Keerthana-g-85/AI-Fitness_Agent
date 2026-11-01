@@ -371,6 +371,23 @@ export const EQUIPMENT_OPTIONS: readonly Equipment[] = [
   "Other",
 ];
 
+export const SPORTS_OPTIONS: readonly string[] = [
+  "Football",
+  "Basketball",
+  "Cricket",
+  "Tennis",
+  "Badminton",
+  "Swimming",
+  "Cycling",
+  "Running",
+  "Hiking",
+  "Volleyball",
+  "Table Tennis",
+  "Martial Arts",
+  "Yoga",
+  "Other",
+];
+
 export const WORKOUT_PREFERENCE_OPTIONS: readonly WorkoutPreference[] = [
   "Strength Training",
   "Cardio",
@@ -652,7 +669,6 @@ export interface OnboardingData {
   submissionId: string;
   profile: ProfileData;
   fitnessGoal: FitnessGoalData;
-  bodyMeasurements: BodyMeasurementsData;
   bodyComposition: BodyCompositionData;
   medicalHistory: MedicalCondition[];
   medications: Medication[];
@@ -813,11 +829,6 @@ export const ONBOARDING_STEPS: readonly OnboardingStepDefinition[] = [
   { label: "Profile", shortLabel: "Profile", path: "/profile" },
   { label: "Fitness Goal", shortLabel: "Goals", path: "/fitness-goal" },
   {
-    label: "Body Measurements",
-    shortLabel: "Measurements",
-    path: "/body-measurements",
-  },
-  {
     label: "Body Composition",
     shortLabel: "Composition",
     path: "/body-composition",
@@ -872,24 +883,6 @@ export const createInitialOnboardingData = (): OnboardingData => ({
     targetBodyFatPercentage: "",
     targetMuscleMass: "",
     targetDate: null,
-  },
-  bodyMeasurements: {
-    weight: "",
-    neck: "",
-    shoulder: "",
-    chest: "",
-    bust: "",
-    waist: "",
-    abdomen: "",
-    hip: "",
-    leftArm: "",
-    rightArm: "",
-    leftThigh: "",
-    rightThigh: "",
-    leftCalf: "",
-    rightCalf: "",
-    measuredAt: null,
-    notes: "",
   },
   bodyComposition: {
     bodyFatPercentage: "",

@@ -18,7 +18,6 @@ import {
   getRegistrationErrorMessage,
   registerUser,
 } from "../api/userApi";
-import { setAuthToken } from "../api/auth";
 import type { RegisterResponse } from "../api/userApi";
 import {
   EMPTY_REGISTER_FORM,
@@ -30,6 +29,7 @@ import type {
   RegisterField,
   RegisterFormValues,
 } from "../validation/register";
+import { useAuth } from "../context/AuthContext";
 import { useOnboarding } from "../context/OnboardingContext";
 
 interface Feedback {
@@ -68,6 +68,7 @@ const PasswordVisibilityToggle = ({
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { resetOnboarding } = useOnboarding();
+  const { refreshUser } = useAuth();
   const [values, setValues] = useState<RegisterFormValues>(EMPTY_REGISTER_FORM);
   const [errors, setErrors] = useState<RegisterErrors>({});
   const [feedback, setFeedback] = useState<Feedback | null>(null);
@@ -76,7 +77,7 @@ const RegisterPage = () => {
 
   const { mutate: submitRegistration, isPending } = useMutation({
     mutationFn: registerUser,
-    onSuccess: (response: RegisterResponse) => {
+    onSuccess: async (response: RegisterResponse) => {
       if (!response.success) {
         setFeedback({ severity: "error", message: response.message });
         return;
@@ -84,8 +85,8 @@ const RegisterPage = () => {
 
       setValues(EMPTY_REGISTER_FORM);
       setErrors({});
-      setAuthToken(response.token ?? null);
       resetOnboarding();
+      await refreshUser();
       navigate("/profile", { state: { registrationSuccess: true } });
     },
     onError: (error: unknown) => {

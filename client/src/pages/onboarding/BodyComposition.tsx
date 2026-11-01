@@ -114,7 +114,7 @@ const BodyCompositionPage = () => {
   return (
     <OnboardingLayout
       description="Enter the readings from your scale or body composition device. All fields are optional."
-      stepIndex={3}
+      stepIndex={2}
       title="Body composition"
     >
       <Box
@@ -171,9 +171,9 @@ const BodyCompositionPage = () => {
           </SectionCard>
 
           <FormNavigation
-            backLabel="Back: Body Measurements"
+            backLabel="Back: Fitness Goal"
             nextLabel="Next: Medical History"
-            onBack={() => navigate("/body-measurements")}
+            onBack={() => navigate("/fitness-goal")}
             onNext={handleNext}
           />
         </Stack>

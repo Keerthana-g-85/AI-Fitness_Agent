@@ -20,11 +20,9 @@ import {
   getOnboardingErrorMessage,
 } from "../../api/onboardingApi";
 import type { OnboardingResponse } from "../../api/onboardingApi";
+import { useAuth } from "../../context/AuthContext";
 import { useOnboarding } from "../../context/OnboardingContext";
-import {
-  BODY_COMPOSITION_FIELDS,
-  BODY_MEASUREMENT_FIELDS,
-} from "../../types/onboarding";
+import { BODY_COMPOSITION_FIELDS } from "../../types/onboarding";
 import { calculateAge } from "../../utils/calculateAge";
 import { calculateDuration } from "../../utils/calculateDuration";
 import { formatDate } from "../../utils/formatDate";
@@ -116,7 +114,8 @@ const addOtherDetail = (values: string[], otherDetail: string): string[] => {
 
 const OnboardingReviewPage = () => {
   const navigate = useNavigate();
-  const { data, regenerateSubmissionId, resetOnboarding } = useOnboarding();
+  const { data, regenerateSubmissionId } = useOnboarding();
+  const { refreshUser } = useAuth();
   const [submitted, setSubmitted] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [consentError, setConsentError] = useState(false);
@@ -168,20 +167,6 @@ const OnboardingReviewPage = () => {
     },
   ];
 
-  const measurementRows = [
-    ...BODY_MEASUREMENT_FIELDS.filter((field) =>
-      data.bodyMeasurements[field.key].trim(),
-    ).map((field) => ({
-      label: field.label,
-      value: withUnit(data.bodyMeasurements[field.key], field.unit),
-    })),
-    {
-      label: "Measured At",
-      value: formatDate(data.bodyMeasurements.measuredAt),
-    },
-    { label: "Notes", value: data.bodyMeasurements.notes },
-  ];
-
   const compositionRows = [
     ...BODY_COMPOSITION_FIELDS.filter((field) =>
       data.bodyComposition[field.key].trim(),
@@ -225,7 +210,7 @@ const OnboardingReviewPage = () => {
 
   const { mutate: submitOnboarding, isPending } = useMutation({
     mutationFn: completeOnboarding,
-    onSuccess: (response: OnboardingResponse) => {
+    onSuccess: async (response: OnboardingResponse) => {
       if (!response.success) {
         setSubmitError(response.message);
         return;
@@ -235,6 +220,7 @@ const OnboardingReviewPage = () => {
       setSnackbarOpen(true);
       setSubmitted(true);
       regenerateSubmissionId();
+      await refreshUser();
     },
     onError: (error: unknown) => {
       setSubmitError(getOnboardingErrorMessage(error));
@@ -256,17 +242,12 @@ const OnboardingReviewPage = () => {
     submitOnboarding(data);
   };
 
-  const handleStartOver = () => {
-    resetOnboarding();
-    navigate("/profile");
-  };
-
   if (submitted) {
     return (
       <>
         <OnboardingLayout
           description="You have completed every step of the onboarding flow."
-          stepIndex={11}
+          stepIndex={10}
           title="Onboarding complete"
         >
           <Stack
@@ -296,8 +277,8 @@ const OnboardingReviewPage = () => {
               <Button onClick={() => setSubmitted(false)} variant="outlined">
                 Review answers
               </Button>
-              <Button onClick={handleStartOver} variant="contained">
-                Start over
+              <Button onClick={() => navigate("/dashboard")} variant="contained">
+                Go to Dashboard
               </Button>
             </Stack>
           </Stack>
@@ -323,7 +304,7 @@ const OnboardingReviewPage = () => {
     <>
       <OnboardingLayout
         description="Check your answers below. You can edit any section before finishing."
-        stepIndex={11}
+        stepIndex={10}
         title="Review and submit"
       >
         <Stack spacing={2.5}>
@@ -364,27 +345,6 @@ const OnboardingReviewPage = () => {
             {fitnessRows.map((row) => (
               <SummaryRow key={row.label} label={row.label} value={row.value} />
             ))}
-          </SectionCard>
-
-          <SectionCard
-            action={
-              <Button
-                onClick={() => navigate("/body-measurements")}
-                size="small"
-                startIcon={<EditIcon />}
-              >
-                Edit
-              </Button>
-            }
-            title="Body Measurements"
-          >
-            {measurementRows.some((row) => row.value.trim()) ? (
-              measurementRows.map((row) => (
-                <SummaryRow key={row.label} label={row.label} value={row.value} />
-              ))
-            ) : (
-              <EmptySummary message="No body measurements entered." />
-            )}
           </SectionCard>
 
           <SectionCard

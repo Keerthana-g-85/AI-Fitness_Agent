@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
 import { QueryFailedError } from "typeorm";
 import CreateUserArguments from "../Arguments/UserArguments/CreateUser";
+import LoginArguments from "../Arguments/UserArguments/Login";
 import User from "../Model/User";
 import UserResponse from "../Response/UserResponse";
+import LoginResponse, { AuthUserResponse } from "../Response/LoginResponse";
 import { createAuthToken } from "../auth";
 import { database } from "../database";
 
@@ -25,7 +27,53 @@ const isUniqueViolation = (error: unknown): boolean => {
   return driverError?.code === "23505";
 };
 
+const toAuthUser = (user: User): AuthUserResponse => ({
+  id: user.id,
+  name: user.name,
+  email: user.email,
+  onboardingCompleted: user.onboardingCompleted,
+  onboardingCompletedAt: user.onboardingCompletedAt ?? null,
+});
+
 export default class UserService {
+  async loginUser(input: LoginArguments): Promise<LoginResponse> {
+    const email =
+      typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
+    const password = typeof input.password === "string" ? input.password : "";
+
+    if (!email) {
+      return { success: false, message: "Email is required" };
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      return { success: false, message: "Enter a valid email address" };
+    }
+
+    if (!password) {
+      return { success: false, message: "Password is required" };
+    }
+
+    const userRepository = database.getRepository(User);
+    const user = await userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      return { success: false, message: "Invalid email or password" };
+    }
+
+    const passwordMatches = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatches) {
+      return { success: false, message: "Invalid email or password" };
+    }
+
+    return {
+      success: true,
+      message: "Login successful",
+      token: createAuthToken(user.id, input.rememberMe ? "30d" : "1d"),
+      user: toAuthUser(user),
+    };
+  }
+
   async createUser(input: CreateUserArguments): Promise<UserResponse> {
     const name = typeof input.name === "string" ? input.name.trim() : "";
     const email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";

@@ -4,7 +4,6 @@ import { getAuthToken } from "./auth";
 import { COMPLETE_ONBOARDING } from "../graphql/Mutation/COMPLETE_ONBOARDING";
 import type {
   BodyCompositionData,
-  BodyMeasurementsData,
   OnboardingData,
 } from "../types/onboarding";
 
@@ -25,25 +24,6 @@ interface FitnessGoalInput {
   targetBodyFatPercentage: number | null;
   targetMuscleMassKg: number | null;
   targetDate: string | null;
-}
-
-interface BodyMeasurementInput {
-  weightKg: number | null;
-  neckCm: number | null;
-  shoulderCm: number | null;
-  chestCm: number | null;
-  bustCm: number | null;
-  waistCm: number | null;
-  abdomenCm: number | null;
-  hipCm: number | null;
-  leftArmCm: number | null;
-  rightArmCm: number | null;
-  leftThighCm: number | null;
-  rightThighCm: number | null;
-  leftCalfCm: number | null;
-  rightCalfCm: number | null;
-  measuredAt: string | null;
-  notes: string | null;
 }
 
 interface BodyCompositionInput {
@@ -100,7 +80,6 @@ interface CompleteOnboardingInput {
   submissionId: string;
   profile: ProfileInput;
   fitnessGoal: FitnessGoalInput;
-  bodyMeasurement: BodyMeasurementInput | null;
   bodyComposition: BodyCompositionInput | null;
   medicalHistories: MedicalHistoryInput[];
   medications: MedicationInput[];
@@ -208,31 +187,6 @@ const integerOrNull = (value: string): number | null =>
 const cleanArray = (values: string[]): string[] =>
   [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 
-const buildBodyMeasurementInput = (
-  measurements: BodyMeasurementsData,
-): BodyMeasurementInput | null => {
-  const input: BodyMeasurementInput = {
-    weightKg: numberOrNull(measurements.weight),
-    neckCm: numberOrNull(measurements.neck),
-    shoulderCm: numberOrNull(measurements.shoulder),
-    chestCm: numberOrNull(measurements.chest),
-    bustCm: numberOrNull(measurements.bust),
-    waistCm: numberOrNull(measurements.waist),
-    abdomenCm: numberOrNull(measurements.abdomen),
-    hipCm: numberOrNull(measurements.hip),
-    leftArmCm: numberOrNull(measurements.leftArm),
-    rightArmCm: numberOrNull(measurements.rightArm),
-    leftThighCm: numberOrNull(measurements.leftThigh),
-    rightThighCm: numberOrNull(measurements.rightThigh),
-    leftCalfCm: numberOrNull(measurements.leftCalf),
-    rightCalfCm: numberOrNull(measurements.rightCalf),
-    measuredAt: measurements.measuredAt,
-    notes: textOrNull(measurements.notes),
-  };
-
-  return Object.values(input).some((value) => value !== null) ? input : null;
-};
-
 const buildBodyCompositionInput = (
   composition: BodyCompositionData,
 ): BodyCompositionInput | null => {
@@ -278,7 +232,6 @@ const buildInput = (data: OnboardingData): CompleteOnboardingInput => ({
     targetMuscleMassKg: numberOrNull(data.fitnessGoal.targetMuscleMass),
     targetDate: data.fitnessGoal.targetDate,
   },
-  bodyMeasurement: buildBodyMeasurementInput(data.bodyMeasurements),
   bodyComposition: buildBodyCompositionInput(data.bodyComposition),
   medicalHistories: data.medicalHistory.map((condition) => ({
     id: condition.id,

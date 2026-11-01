@@ -12,6 +12,7 @@ import BodyMeasurement from "./BodyMeasurement";
 import DataSharingConsent from "./DataSharingConsent";
 import EatingHabit from "./EatingHabit";
 import ExerciseRestriction from "./ExerciseRestriction";
+import FoodIntake from "./FoodIntake";
 import FitnessGoal from "./FitnessGoal";
 import FoodAvailability from "./FoodAvailability";
 import FoodPreference from "./FoodPreference";
@@ -19,9 +20,13 @@ import MedicalHistory from "./MedicalHistory";
 import Medication from "./Medication";
 import OnboardingSubmission from "./OnboardingSubmission";
 import Personalization from "./Personalization";
+import SleepRecord from "./SleepRecord";
+import SportsActivity from "./SportsActivity";
 import UserProfile from "./UserProfile";
 import WorkLife from "./WorkLife";
 import WorkoutPreference from "./WorkoutPreference";
+import WaterIntake from "./WaterIntake";
+import WorkoutSession from "./WorkoutSession";
 import WorkoutSchedule from "./WorkoutSchedule";
 
 @ObjectType()
@@ -100,4 +105,19 @@ export default class User {
 
   @OneToMany(() => OnboardingSubmission, (submission) => submission.user)
   onboardingSubmissions?: OnboardingSubmission[];
+
+  @OneToMany(() => FoodIntake, (intake) => intake.user)
+  foodIntakes?: FoodIntake[];
+
+  @OneToMany(() => WaterIntake, (intake) => intake.user)
+  waterIntakes?: WaterIntake[];
+
+  @OneToMany(() => WorkoutSession, (session) => session.user)
+  workoutSessions?: WorkoutSession[];
+
+  @OneToMany(() => SleepRecord, (record) => record.user)
+  sleepRecords?: SleepRecord[];
+
+  @OneToMany(() => SportsActivity, (activity) => activity.user)
+  sportsActivities?: SportsActivity[];
 }

@@ -1,11 +1,9 @@
 import { EntityManager, In } from "typeorm";
 import CompleteOnboardingInput, {
   BodyCompositionInput,
-  BodyMeasurementInput,
 } from "../Arguments/OnboardingArguments/CompleteOnboarding";
 import Allergy from "../Model/Allergy";
 import BodyComposition from "../Model/BodyComposition";
-import BodyMeasurement from "../Model/BodyMeasurement";
 import DataSharingConsent from "../Model/DataSharingConsent";
 import EatingHabit from "../Model/EatingHabit";
 import ExerciseRestriction from "../Model/ExerciseRestriction";
@@ -315,29 +313,6 @@ const isValidTime = (value: string): boolean => TIME_REGEX.test(value);
 const decimal = (value?: number | null): string | null =>
   value === null || value === undefined ? null : String(value);
 
-const hasMeasurementData = (input?: BodyMeasurementInput | null): boolean =>
-  Boolean(
-    input &&
-      ([
-        input.weightKg,
-        input.neckCm,
-        input.shoulderCm,
-        input.chestCm,
-        input.bustCm,
-        input.waistCm,
-        input.abdomenCm,
-        input.hipCm,
-        input.leftArmCm,
-        input.rightArmCm,
-        input.leftThighCm,
-        input.rightThighCm,
-        input.leftCalfCm,
-        input.rightCalfCm,
-      ].some((value) => value !== null && value !== undefined) ||
-        Boolean(trimToNull(input.measuredAt)) ||
-        Boolean(trimToNull(input.notes))),
-  );
-
 const hasCompositionData = (input?: BodyCompositionInput | null): boolean =>
   Boolean(
     input &&
@@ -406,10 +381,6 @@ export default class OnboardingService {
 
         await this.saveProfile(manager, authenticatedUserId, input);
         await this.saveFitnessGoal(manager, authenticatedUserId, input);
-
-        if (input.bodyMeasurement && hasMeasurementData(input.bodyMeasurement)) {
-          await this.saveBodyMeasurement(manager, authenticatedUserId, input);
-        }
 
         if (input.bodyComposition && hasCompositionData(input.bodyComposition)) {
           await this.saveBodyComposition(manager, authenticatedUserId, input);
@@ -513,10 +484,6 @@ export default class OnboardingService {
 
     if (goal.targetDate && !isFutureDate(goal.targetDate)) {
       return "Target date must be in the future";
-    }
-
-    if (input.bodyMeasurement && !this.validateBodyMeasurement(input.bodyMeasurement)) {
-      return "Body measurements must be positive numbers";
     }
 
     if (input.bodyComposition && !this.validateBodyComposition(input.bodyComposition)) {
@@ -789,30 +756,6 @@ export default class OnboardingService {
     return null;
   }
 
-  private validateBodyMeasurement(input: BodyMeasurementInput): boolean {
-    const numericValues = [
-      input.weightKg,
-      input.neckCm,
-      input.shoulderCm,
-      input.chestCm,
-      input.bustCm,
-      input.waistCm,
-      input.abdomenCm,
-      input.hipCm,
-      input.leftArmCm,
-      input.rightArmCm,
-      input.leftThighCm,
-      input.rightThighCm,
-      input.leftCalfCm,
-      input.rightCalfCm,
-    ];
-
-    return (
-      numericValues.every(isPositive) &&
-      (!input.measuredAt || isNotFutureDate(input.measuredAt))
-    );
-  }
-
   private validateBodyComposition(input: BodyCompositionInput): boolean {
     return (
       isPercentage(input.bodyFatPercentage) &&
@@ -876,40 +819,6 @@ export default class OnboardingService {
         targetBodyFatPercentage: decimal(input.fitnessGoal.targetBodyFatPercentage),
         targetMuscleMassKg: decimal(input.fitnessGoal.targetMuscleMassKg),
         targetDate: input.fitnessGoal.targetDate ?? null,
-      }),
-    );
-  }
-
-  private async saveBodyMeasurement(
-    manager: EntityManager,
-    userId: string,
-    input: CompleteOnboardingInput,
-  ): Promise<void> {
-    const measurement = input.bodyMeasurement;
-
-    if (!measurement) {
-      return;
-    }
-
-    await manager.getRepository(BodyMeasurement).save(
-      manager.getRepository(BodyMeasurement).create({
-        userId,
-        weightKg: decimal(measurement.weightKg),
-        neckCm: decimal(measurement.neckCm),
-        shoulderCm: decimal(measurement.shoulderCm),
-        chestCm: decimal(measurement.chestCm),
-        bustCm: decimal(measurement.bustCm),
-        waistCm: decimal(measurement.waistCm),
-        abdomenCm: decimal(measurement.abdomenCm),
-        hipCm: decimal(measurement.hipCm),
-        leftArmCm: decimal(measurement.leftArmCm),
-        rightArmCm: decimal(measurement.rightArmCm),
-        leftThighCm: decimal(measurement.leftThighCm),
-        rightThighCm: decimal(measurement.rightThighCm),
-        leftCalfCm: decimal(measurement.leftCalfCm),
-        rightCalfCm: decimal(measurement.rightCalfCm),
-        measuredAt: measurement.measuredAt ?? null,
-        notes: trimToNull(measurement.notes),
       }),
     );
   }

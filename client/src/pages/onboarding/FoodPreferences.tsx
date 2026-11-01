@@ -161,7 +161,7 @@ const FoodPreferencesPage = () => {
   return (
     <OnboardingLayout
       description="Help your AI coach understand the meals, ingredients and eating routine that work for you."
-      stepIndex={7}
+      stepIndex={6}
       title="Food preferences"
     >
       <Box

@@ -46,57 +46,6 @@ export class FitnessGoalInput {
 }
 
 @InputType()
-export class BodyMeasurementInput {
-  @Field(() => Float, { nullable: true })
-  weightKg?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  neckCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  shoulderCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  chestCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  bustCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  waistCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  abdomenCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  hipCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  leftArmCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  rightArmCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  leftThighCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  rightThighCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  leftCalfCm?: number | null;
-
-  @Field(() => Float, { nullable: true })
-  rightCalfCm?: number | null;
-
-  @Field(() => String, { nullable: true })
-  measuredAt?: string | null;
-
-  @Field(() => String, { nullable: true })
-  notes?: string | null;
-}
-
-@InputType()
 export class BodyCompositionInput {
   @Field(() => Float, { nullable: true })
   bodyFatPercentage?: number | null;
@@ -436,9 +385,6 @@ export default class CompleteOnboardingInput {
 
   @Field(() => FitnessGoalInput)
   fitnessGoal!: FitnessGoalInput;
-
-  @Field(() => BodyMeasurementInput, { nullable: true })
-  bodyMeasurement?: BodyMeasurementInput | null;
 
   @Field(() => BodyCompositionInput, { nullable: true })
   bodyComposition?: BodyCompositionInput | null;

@@ -73,7 +73,7 @@ const AllergiesPage = () => {
   return (
     <OnboardingLayout
       description="List any allergies or sensitivities you have. This section is optional."
-      stepIndex={6}
+      stepIndex={5}
       title="Allergies"
     >
       <Box

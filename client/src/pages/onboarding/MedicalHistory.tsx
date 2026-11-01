@@ -105,7 +105,7 @@ const MedicalHistoryPage = () => {
   return (
     <OnboardingLayout
       description="Share any current or previous medical conditions. This section is optional."
-      stepIndex={4}
+      stepIndex={3}
       title="Medical history"
     >
       <Box
